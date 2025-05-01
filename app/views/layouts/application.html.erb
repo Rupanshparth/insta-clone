@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+</head>
+<body>
+  <% if account_signed_in?%>
+    <%= render "shared/nav" %>
+  <% else %>
+    <%= render "shared/pub_nav" %>
+  <% end %>
+  <div class="container-fluid">
+    <div class="row">
+      <%= yield %>
+    </div>
+  </div>
+  <%= render "shared/mobile_nav" %>
+</body>
+</html>

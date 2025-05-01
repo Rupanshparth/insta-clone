@@ -1,0 +1,15 @@
+<main class="col-12 col-md-9">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    <% @posts.each do |post| %>
+      <div class="col">
+        <div class="card">
+          <%= image_tag post.image.url, class: "img img-fulid" %>
+          <div class="card-body">
+            <h6 class="card-title mb-1"><%= post.account.username %></h6>
+            <p class="card-text"><%= truncate(post.caption, length: 80) %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</main>

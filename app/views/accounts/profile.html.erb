@@ -31,7 +31,7 @@
             <h6 class="card-title mb-1"><%= post.account.username %></h6>
             <p class="card-text"><%= truncate(post.caption, length: 80) %></p>
             <% if post.account == current_account %>
-              <%= link_to "Delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-2" %>
+              <%= button_to "Delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-2" %>
             <% end %>
           </div>
         </div>

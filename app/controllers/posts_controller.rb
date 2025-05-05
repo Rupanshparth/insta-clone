@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
     before_action :authenticate_account!
+    before_action :set_post, only: [:destroy, :show]
 
     def new
         @post = Post.new
@@ -16,7 +17,7 @@ class PostsController < ApplicationController
         end
     end
 
-    def delete
+    def destroy
         if @post.destroy
             redirect_to dashboard_path, flash: { success: "Post deleted successfully!" }
         else

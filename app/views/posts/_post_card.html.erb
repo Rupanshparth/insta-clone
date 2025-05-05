@@ -1,0 +1,12 @@
+<div class="col">
+  <div class="card">
+    <div class="post-meta d-flex align-items-center mb-2 p-2">
+      <%= image_tag post.account.image.thumb.url, class: "rounded-circle me-2", alt: "Profile picture", width: 40, height: 40 %>
+      <h6 class="card-title mb-0"><%= post.account.username %></h6>
+    </div>
+    <%= image_tag post.image.url, class: "img img-fluid" %>
+    <div class="card-body">
+      <p class="card-text"><%= truncate(post.caption, length: 80) %></p>
+    </div>
+  </div>
+</div>

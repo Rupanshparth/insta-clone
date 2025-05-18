@@ -1,0 +1,21 @@
+<turbo-frame id="like_button_post_<%= post.id %>">
+  <% if current_account && post.likes.exists?(account: current_account) %>
+    <%= button_to post_like_path(post),
+        method: :delete,
+        data: { turbo_frame: "like_button_post_#{post.id}" },
+        class: "btn btn-link p-0 text-danger like-button" do %>
+      ❤️
+    <% end %>
+  <% else %>
+    <%= button_to post_like_path(post),
+        method: :post,
+        data: { turbo_frame: "like_button_post_#{post.id}" },
+        class: "btn btn-link p-0 text-muted like-button" do %>
+      🤍
+    <% end %>
+  <% end %>
+
+  <span class="like-count">
+    <%= pluralize(post.likes.count, 'like') %>
+  </span>
+</turbo-frame>

@@ -1,7 +1,12 @@
 <div class="col">
   <div class="card">
     <div class="post-meta d-flex align-items-center mb-2 p-2">
-      <%= image_tag post.account.image.thumb.url, class: "rounded-circle me-2", alt: "Profile picture", width: 40, height: 40 %>
+      <% if post.account.image.present? && post.account.image.thumb.present? %>
+        <%= image_tag post.account.image.thumb.url, class: "rounded-circle me-md-4 mb-3 mb-md-0", alt: "Profile picture" %>
+      <% else %>
+        <%= image_tag "default.png", class: "rounded-circle me-md-4 mb-3 mb-md-0", alt: "Default profile picture" %>
+      <% end %>
+
       <h6 class="card-title mb-0"><%= post.account.username %></h6>
     </div>
     <%= image_tag post.image.url, class: "img img-fluid" %>

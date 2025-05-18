@@ -10,6 +10,21 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   get "/dashboard" => "accounts#index"
   resources :posts
+  resources :posts do
+    resource :like, only: [:create, :destroy]
+  end
+
+  resources :accounts, only: [:show] do
+    post 'follow', to: 'follows#create'
+    delete 'unfollow', to: 'follows#destroy'
+  end
+
+  resources :accounts, only: [:show] do
+    member do
+      get :followers
+      get :following
+    end
+  end
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

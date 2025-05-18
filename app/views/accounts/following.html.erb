@@ -1,0 +1,21 @@
+<h4 class="mb-3">Followers</h4>
+<% @following.each do |follower| %>
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-center">
+      <% if follower.image&.thumb&.url.present? %>
+        <%= image_tag follower.image.thumb.url, class: "rounded-circle me-2", width: 40, height: 40 %>
+      <% else %>
+        <%= image_tag "default.png", class: "rounded-circle me-2", width: 40, height: 40 %>
+      <% end %>
+      <%= link_to follower.username, account_path(follower), class: "fw-bold text-decoration-none" %>
+    </div>
+
+    <% if follower != current_account %>
+      <% if Follow.exists?(follower_id: current_account.id, followed_id: follower.id) %>
+        <%= button_to "Unfollow", account_unfollow_path(follower), method: :delete, class: "btn btn-sm btn-outline-danger" %>
+      <% else %>
+        <%= button_to "Follow", account_follow_path(follower), method: :post, class: "btn btn-sm btn-primary" %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

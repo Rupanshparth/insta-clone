@@ -3,23 +3,74 @@
   <!-- Profile header -->
   <div class="d-flex flex-column flex-md-row align-items-center mb-4">
     
-      <%= image_tag @account.image.thumb.url, class: "rounded-circle me-md-4 mb-3 mb-md-0", alt: "Profile picture" %>
-    
+      <% if @account.image.present? && @account.image.thumb.present? %>
+        <%= image_tag @account.image.thumb.url, class: "rounded-circle me-md-4 mb-3 mb-md-0", alt: "Profile picture" %>
+      <% else %>
+        <%= image_tag "default.png", class: "rounded-circle me-md-4 mb-3 mb-md-0", alt: "Default profile picture" %>
+      <% end %>
 
     <div>
       <h2 class="mb-1"><%= @account.full_name %></h2>
       <p class="text-muted mb-2">@<%= @account.username %></p>
-      <%= link_to "Edit Profile", edit_account_registration_path, class: "btn btn-outline-secondary btn-sm" %>
+      <% if current_account == @account %>
+        <%= link_to "Edit Profile", edit_account_registration_path, class: "btn btn-outline-secondary btn-sm" %>
+      <% else %>
+        <% if current_account.following.include?(@account) %>
+          <%= button_to "Unfollow", account_unfollow_path(@account),
+                method: :delete,
+                class: "btn btn-sm btn-outline-danger" %>
+        <% else %>
+          <%= button_to "Follow", account_follow_path(@account),
+                method: :post,
+                class: "btn btn-sm btn-primary" %>
+        <% end %>
+      <% end %>
 
       <div class="d-flex gap-4 mt-3">
         <p><strong><%= @account.total_posts %></strong> posts</p>
-        <p><strong><%= @account.total_followers %></strong> followers</p>
-        <p><strong><%= @account.total_following %></strong> following</p>
+        <p><strong><%= @account.posts.count %></strong> posts</p>
+        <p>
+          <strong>
+            <%= link_to @account.followers.count, followers_account_path(@account), class: "text-decoration-none" %>
+          </strong>
+          followers
+        </p>
+        <p>
+          <strong>
+            <%= link_to @account.following.count, following_account_path(@account), class: "text-decoration-none" %>
+          </strong>
+          following
+        </p>
       </div>
     </div>
   </div>
 
   <hr>
+                  <% if current_account == @account && @suggested_accounts.any? %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h6 class="card-title">Suggested for you</h6>
+      <ul class="list-unstyled">
+        <% @suggested_accounts.each do |suggested| %>
+          <li class="d-flex align-items-center justify-content-between mb-2">
+            <div class="d-flex align-items-center">
+              <% if suggested.image.present? && suggested.image.thumb.present? %>
+                <%= image_tag suggested.image.thumb.url, class: "rounded-circle me-2", alt: "", width: 32, height: 32 %>
+              <% else %>
+                <%= image_tag "default.png", class: "rounded-circle me-2", width: 32, height: 32 %>
+              <% end %>
+              <%= link_to suggested.username, account_path(suggested), class: "text-decoration-none fw-bold" %>
+            </div>
+
+            <%= button_to "Follow", account_follow_path(suggested),
+                  method: :post,
+                  class: "btn btn-sm btn-primary" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
 
   <!-- Posts grid -->
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -32,7 +83,13 @@
             <p class="card-text"><%= truncate(post.caption, length: 80) %></p>
             <% if post.account == current_account %>
               <%= button_to "Delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-2" %>
+
             <% end %>
+
+            <turbo-frame id="like_section_post_<%= post.id %>">
+              <%= render "posts/like_button", post: post %>
+            </turbo-frame>
+            
           </div>
         </div>
       </div>

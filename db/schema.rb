@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_30_052407) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_18_114008) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_30_052407) do
     t.index ["reset_password_token"], name: "index_accounts_on_reset_password_token", unique: true
   end
 
+  create_table "follows", force: :cascade do |t|
+    t.bigint "follower_id", null: false
+    t.bigint "followed_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["followed_id"], name: "index_follows_on_followed_id"
+    t.index ["follower_id"], name: "index_follows_on_follower_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_likes_on_account_id"
+    t.index ["post_id"], name: "index_likes_on_post_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "image"
     t.bigint "account_id"
@@ -41,4 +59,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_30_052407) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_posts_on_account_id"
   end
+
+  add_foreign_key "follows", "accounts", column: "followed_id"
+  add_foreign_key "follows", "accounts", column: "follower_id"
+  add_foreign_key "likes", "accounts"
+  add_foreign_key "likes", "posts"
 end
